@@ -22,30 +22,35 @@ bool readDataFromFile(const std::string& filename, Container& studentai) {
     }
 
     std::string line;
-    std::getline(file, line);  // Ignoruojama pirma eilute (Antraste)
+    std::getline(file, line);  // Ignoruojama pirma eilute (antraste)
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         Studentas temp;
-        iss >> temp.Vardas >> temp.Pavarde;
+        std::string vardas, pavarde;
+        iss >> vardas >> pavarde;
+        temp.setVardas(vardas);
+        temp.setPavarde(pavarde);
 
+        std::vector<double> nd;
         double grade;
         while (iss >> grade) {
-            temp.ND.push_back(grade);
+            nd.push_back(grade);
         }
 
-        if (!temp.ND.empty() && temp.ND.back() >= 1.0 && temp.ND.back() <= 10.0) {
-            temp.EGZ = temp.ND.back();
-            temp.ND.pop_back();
+        if (!nd.empty() && nd.back() >= 1.0 && nd.back() <= 10.0) {
+            temp.setEgz(nd.back());
+            nd.pop_back();
         } else {
-            std::cerr << "Klaida: Netinkamas arba nera egzamino ivertinimo studentui: " << temp.Vardas << " " << temp.Pavarde << std::endl;
+            std::cerr << "Klaida: Netinkamas arba nera egzamino ivertinimo studentui: " << temp.getVardas() << " " << temp.getPavarde() << std::endl;
             continue;
         }
 
-        temp.ND.erase(std::remove_if(temp.ND.begin(), temp.ND.end(), [](double g) { return g < 1.0 || g > 10.0; }), temp.ND.end());
+        nd.erase(std::remove_if(nd.begin(), nd.end(), [](double g) { return g < 1.0 || g > 10.0; }), nd.end());
 
-        temp.GalutinisVid = calculateFinalGrade(calculateHomeworkAverage(temp.ND), temp.EGZ);
-        temp.GalutinisMed = calculateFinalGrade(calculateMedian(temp.ND), temp.EGZ);
+        temp.setNd(nd);
+        temp.setGalutinisVid(calculateFinalGrade(calculateHomeworkAverage(nd), temp.getEgz()));
+        temp.setGalutinisMed(calculateFinalGrade(calculateMedian(nd), temp.getEgz()));
 
         studentai.push_back(temp);
     }
@@ -59,36 +64,43 @@ void readDataFromUser(Container& studentai) {
     std::string line;
     while (true) {
         Studentas temp;
+        std::string vardas, pavarde;
+        double egz;
 
         std::cout << "Iveskite studento varda (arba '0' jei norite uzbaigti): ";
-        std::cin >> temp.Vardas;
-        if (temp.Vardas == "0") break;
+        std::cin >> vardas;
+        if (vardas == "0") break;
+        temp.setVardas(vardas);
 
         std::cout << "Iveskite studento pavarde: ";
-        std::cin >> temp.Pavarde;
+        std::cin >> pavarde;
+        temp.setPavarde(pavarde);
 
-        std::cout << "Iveskite egzmaino ivertinima (1-10): ";
-        std::cin >> temp.EGZ;
-        if (temp.EGZ < 1.0 || temp.EGZ > 10.0) {
+        std::cout << "Iveskite egzamino ivertinima (1-10): ";
+        std::cin >> egz;
+        if (egz < 1.0 || egz > 10.0) {
             std::cerr << "Netinkamas egzamino ivertinimas. Bandykite dar." << std::endl;
             continue;
         }
+        temp.setEgz(egz);
 
+        std::vector<double> nd;
         std::cout << "Iveskite namu darbu ivertinimus (1-10). Iveskite '-1' jei norite uzbaigti: ";
         double grade;
         while (std::cin >> grade) {
             if (grade == -1) break;
             if (grade >= 1.0 && grade <= 10.0) {
-                temp.ND.push_back(grade);
+                nd.push_back(grade);
             } else {
-                std::cerr << "Netinkamas ivertinimas. Iveskite ivertinima nuo 1 iki 10." << std::endl;
+                std::cerr << "Netinkamas ivertinimas. Iveskite ivertinima tarp 1 ir 10 imtinai." << std::endl;
             }
         }
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        temp.GalutinisVid = calculateFinalGrade(calculateHomeworkAverage(temp.ND), temp.EGZ);
-        temp.GalutinisMed = calculateFinalGrade(calculateMedian(temp.ND), temp.EGZ);
+        temp.setNd(nd);
+        temp.setGalutinisVid(calculateFinalGrade(calculateHomeworkAverage(nd), temp.getEgz()));
+        temp.setGalutinisMed(calculateFinalGrade(calculateMedian(nd), temp.getEgz()));
 
         studentai.push_back(temp);
     }
@@ -106,9 +118,9 @@ void readDataFromUser(Container& studentai) {
         outfile << std::string(70, '-') << std::endl;
 
         for (const auto& student : studentai) {
-            outfile << std::setw(15) << student.Pavarde << std::setw(15) << student.Vardas
-                    << std::fixed << std::setprecision(2) << std::setw(20) << student.GalutinisVid
-                    << std::setw(20) << student.GalutinisMed << std::endl;
+            outfile << std::setw(15) << student.getPavarde() << std::setw(15) << student.getVardas()
+                    << std::fixed << std::setprecision(2) << std::setw(20) << student.getGalutinisVid()
+                    << std::setw(20) << student.getGalutinisMed() << std::endl;
         }
 
         outfile.close();
@@ -118,7 +130,7 @@ void readDataFromUser(Container& studentai) {
 }
 
 inline void sortStudents(std::list<Studentas>& studentai) {
-    std::cout << "Pasirinkite rusiavimo metoda (studentu skaicius: " << studentai.size() + 1 << "): " << std::endl;
+    std::cout << "Pasirinkite rusiavimo metoda (Studentu skaicius: " << studentai.size() + 1 << "): " << std::endl;
     std::cout << "1. Vardas" << std::endl;
     std::cout << "2. Pavarde" << std::endl;
     std::cout << "3. Galutinis ivertinimas (Vid.)" << std::endl;
@@ -129,19 +141,19 @@ inline void sortStudents(std::list<Studentas>& studentai) {
 
     if (method == 1) {
         studentai.sort([](const Studentas& a, const Studentas& b) {
-            return a.Vardas < b.Vardas;
+            return a.getVardas() < b.getVardas();
         });
     } else if (method == 2) {
         studentai.sort([](const Studentas& a, const Studentas& b) {
-            return a.Pavarde < b.Pavarde;
+            return a.getPavarde() < b.getPavarde();
         });
     } else if (method == 3) {
         studentai.sort([](const Studentas& a, const Studentas& b) {
-            return a.GalutinisVid < b.GalutinisVid;
+            return a.getGalutinisVid() < b.getGalutinisVid();
         });
     } else if (method == 4) {
         studentai.sort([](const Studentas& a, const Studentas& b) {
-            return a.GalutinisMed < b.GalutinisMed;
+            return a.getGalutinisMed() < b.getGalutinisMed();
         });
     } else {
         std::cerr << "Netinkamas metodas. Bandykite dar." << std::endl;
@@ -150,30 +162,30 @@ inline void sortStudents(std::list<Studentas>& studentai) {
 
 template <typename Container>
 void sortStudents(Container& studentai) {
-    std::cout << "Pasirinkite rusiavimo metoda (studentu skaicius: " << studentai.size() + 1 << "): " << std::endl;
+    std::cout << "Pasirinkite rusiavimo metoda (Studentu skaicius: " << studentai.size() + 1 << "): " << std::endl;
     std::cout << "1. Vardas" << std::endl;
     std::cout << "2. Pavarde" << std::endl;
     std::cout << "3. Galutinis ivertinimas (Vid.)" << std::endl;
-    std::cout << "4. Galutinis ivertinimas (Med.)" << std::endl;
+    std::cout << "4. galutinis ivertinimas (Med.)" << std::endl;
 
     int method;
     std::cin >> method;
 
     if (method == 1) {
         std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
-            return a.Vardas < b.Vardas;
+            return a.getVardas() < b.getVardas();
         });
     } else if (method == 2) {
         std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
-            return a.Pavarde < b.Pavarde;
+            return a.getPavarde() < b.getPavarde();
         });
     } else if (method == 3) {
         std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
-            return a.GalutinisVid < b.GalutinisVid;
+            return a.getGalutinisVid() < b.getGalutinisVid();
         });
     } else if (method == 4) {
         std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
-            return a.GalutinisMed < b.GalutinisMed;
+            return a.getGalutinisMed() < b.getGalutinisMed();
         });
     } else {
         std::cerr << "Netinkamas metodas. Bandykite dar." << std::endl;
@@ -183,7 +195,7 @@ void sortStudents(Container& studentai) {
 template <typename Container>
 void splitStrategy1(const Container& studentai, Container& vargsiai, Container& kietekai) {
     for (const auto& student : studentai) {
-        if (student.GalutinisVid < 5.0) {
+        if (student.getGalutinisVid() < 5.0) {
             vargsiai.push_back(student);
         } else {
             kietekai.push_back(student);
@@ -194,7 +206,7 @@ void splitStrategy1(const Container& studentai, Container& vargsiai, Container& 
 template <typename Container>
 void splitStrategy2(Container& studentai, Container& vargsiai) {
     for (auto it = studentai.begin(); it != studentai.end(); ) {
-        if (it->GalutinisVid < 5.0) {
+        if (it->getGalutinisVid() < 5.0) {
             vargsiai.push_back(std::move(*it));
             it = studentai.erase(it);
         } else {
@@ -206,9 +218,9 @@ void splitStrategy2(Container& studentai, Container& vargsiai) {
 template <typename Container>
 void splitStrategy3(Container& studentai, Container& vargsiai) {
     std::partition_copy(studentai.begin(), studentai.end(), std::back_inserter(vargsiai), studentai.begin(),
-                        [](const Studentas& student) { return student.GalutinisVid < 5.0; });
+                        [](const Studentas& student) { return student.getGalutinisVid() < 5.0; });
     studentai.erase(std::remove_if(studentai.begin(), studentai.end(),
-                                   [](const Studentas& student) { return student.GalutinisVid < 5.0; }), studentai.end());
+                                   [](const Studentas& student) { return student.getGalutinisVid() < 5.0; }), studentai.end());
 }
 
 template <typename Container>
@@ -248,9 +260,9 @@ void processStudents(const std::string& filename, double& sortTime, double& spli
     vargsiaiFile << std::string(70, '-') << std::endl;
 
     for (const auto& student : vargsiai) {
-        vargsiaiFile << std::setw(15) << student.Pavarde << " " << std::setw(15) << student.Vardas << " "
-                     << std::fixed << std::setprecision(2) << std::setw(20) << student.GalutinisVid << " "
-                     << std::setw(20) << student.GalutinisMed << "\n";
+        vargsiaiFile << std::setw(15) << student.getPavarde() << " " << std::setw(15) << student.getVardas() << " "
+                     << std::fixed << std::setprecision(2) << std::setw(20) << student.getGalutinisVid() << " "
+                     << std::setw(20) << student.getGalutinisMed() << "\n";
     }
 
     kietekaiFile << std::left << std::setw(15) << "Pavarde" << std::setw(15) << "Vardas"
@@ -258,9 +270,9 @@ void processStudents(const std::string& filename, double& sortTime, double& spli
     kietekaiFile << std::string(70, '-') << std::endl;
 
     for (const auto& student : kietekai) {
-        kietekaiFile << std::setw(15) << student.Pavarde << " " << std::setw(15) << student.Vardas << " "
-                     << std::fixed << std::setprecision(2) << std::setw(20) << student.GalutinisVid << " "
-                     << std::setw(20) << student.GalutinisMed << "\n";
+        kietekaiFile << std::setw(15) << student.getPavarde() << " " << std::setw(15) << student.getVardas() << " "
+                     << std::fixed << std::setprecision(2) << std::setw(20) << student.getGalutinisVid() << " "
+                     << std::setw(20) << student.getGalutinisMed() << "\n";
     }
 
     vargsiaiFile.close();

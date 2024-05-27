@@ -25,12 +25,16 @@ int main() {
             std::cerr << "Klaida: " << e.what() << std::endl;
             return EXIT_FAILURE;
         }
-
     } else if (pasirinkimas == "vartotojas"){
         readDataFromUser(studentai);
     } else if (pasirinkimas == "generuoti"){
-        int strategy = 1;
-        LaikoMatavimas<std::vector<Studentas>>(dydziai, strategy);
+        int strategy;
+        std::cout << "Pasirinkite strategija (1, 2, 3)" << std::endl;
+        std::cin >> strategy;
+        
+        if (strategy == 1 || strategy == 2 || strategy == 3) {
+            LaikoMatavimas<std::vector<Studentas>>(dydziai, strategy);
+        } else std::cout << "Netinkamas pasirinkimas" << std::endl;
     } else {
         std::cerr << "Netinkamas pasirinkimas. Prasau pasirinkite 'failas' arba 'vartotojas'." << std::endl;
         return EXIT_FAILURE;
