@@ -1,4 +1,4 @@
-Programos spartos testavimas
+Programos spartos testavimas (v1.0)
 
 std::vector (1 strategija)
 
