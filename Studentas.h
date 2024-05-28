@@ -4,10 +4,26 @@
 #include <string>
 #include <vector>
 
-class Studentas {
-private:
+class Zmogus {
+protected:
     std::string Vardas;
     std::string Pavarde;
+
+public:
+    Zmogus() : Vardas(""), Pavarde("") {}
+    Zmogus(const std::string& vardas, const std::string& pavarde) : Vardas(vardas), Pavarde(pavarde) {}
+
+    virtual ~Zmogus() = default;  // Virtual destructor
+
+    // Pure virtual functions make this an abstract class
+    virtual std::string getVardas() const = 0;
+    virtual std::string getPavarde() const = 0;
+    virtual void setVardas(const std::string& vardas) = 0;
+    virtual void setPavarde(const std::string& pavarde) = 0;
+};
+
+class Studentas : public Zmogus {
+private:
     std::vector<double> ND;
     double EGZ;
     double GalutinisVid;
@@ -15,18 +31,18 @@ private:
 
 public:
     // Default constructor
-    Studentas() : Vardas(""), Pavarde(""), EGZ(0), GalutinisVid(0), GalutinisMed(0) {}
+    Studentas() : Zmogus(), EGZ(0), GalutinisVid(0), GalutinisMed(0) {}
 
     // Parameterized constructor
     Studentas(const std::string& vardas, const std::string& pavarde, const std::vector<double>& nd, double egz)
-        : Vardas(vardas), Pavarde(pavarde), ND(nd), EGZ(egz), GalutinisVid(0), GalutinisMed(0) {}
+        : Zmogus(vardas, pavarde), ND(nd), EGZ(egz), GalutinisVid(0), GalutinisMed(0) {}
 
-    // Rule of Five
-    ~Studentas() = default;
-    
+    // Destructor
+    ~Studentas() override = default;
+
     // Copy constructor
     Studentas(const Studentas& other)
-        : Vardas(other.Vardas), Pavarde(other.Pavarde), ND(other.ND), EGZ(other.EGZ), GalutinisVid(other.GalutinisVid), GalutinisMed(other.GalutinisMed) {}
+        : Zmogus(other.Vardas, other.Pavarde), ND(other.ND), EGZ(other.EGZ), GalutinisVid(other.GalutinisVid), GalutinisMed(other.GalutinisMed) {}
     
     // Copy assignment operator
     Studentas& operator=(const Studentas& other) {
@@ -42,7 +58,7 @@ public:
     
     // Move constructor
     Studentas(Studentas&& other) noexcept
-        : Vardas(std::move(other.Vardas)), Pavarde(std::move(other.Pavarde)), ND(std::move(other.ND)), EGZ(other.EGZ), GalutinisVid(other.GalutinisVid), GalutinisMed(other.GalutinisMed) {
+        : Zmogus(std::move(other.Vardas), std::move(other.Pavarde)), ND(std::move(other.ND)), EGZ(other.EGZ), GalutinisVid(other.GalutinisVid), GalutinisMed(other.GalutinisMed) {
         other.EGZ = 0;
         other.GalutinisVid = 0;
         other.GalutinisMed = 0;
@@ -64,16 +80,16 @@ public:
     }
 
     // Getters
-    std::string getVardas() const { return Vardas; }
-    std::string getPavarde() const { return Pavarde; }
+    std::string getVardas() const override { return Vardas; }
+    std::string getPavarde() const override { return Pavarde; }
     const std::vector<double>& getNd() const { return ND; }
     double getEgz() const { return EGZ; }
     double getGalutinisVid() const { return GalutinisVid; }
     double getGalutinisMed() const { return GalutinisMed; }
 
     // Setters
-    void setVardas(const std::string& v) { Vardas = v; }
-    void setPavarde(const std::string& p) { Pavarde = p; }
+    void setVardas(const std::string& v) override { Vardas = v; }
+    void setPavarde(const std::string& p) override { Pavarde = p; }
     void setNd(const std::vector<double>& nd) { ND = nd; }
     void setEgz(double e) { EGZ = e; }
     void setGalutinisVid(double g) { GalutinisVid = g; }
@@ -82,4 +98,4 @@ public:
     void addNd(double grade) { ND.push_back(grade); }
 };
 
-#endif
+#endif // STUDENTAS_H
