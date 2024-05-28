@@ -14,6 +14,55 @@ private:
     double GalutinisMed;
 
 public:
+    // Default constructor
+    Studentas() : Vardas(""), Pavarde(""), EGZ(0), GalutinisVid(0), GalutinisMed(0) {}
+
+    // Parameterized constructor
+    Studentas(const std::string& vardas, const std::string& pavarde, const std::vector<double>& nd, double egz)
+        : Vardas(vardas), Pavarde(pavarde), ND(nd), EGZ(egz), GalutinisVid(0), GalutinisMed(0) {}
+
+    // Rule of Five
+    ~Studentas() = default;
+    
+    // Copy constructor
+    Studentas(const Studentas& other)
+        : Vardas(other.Vardas), Pavarde(other.Pavarde), ND(other.ND), EGZ(other.EGZ), GalutinisVid(other.GalutinisVid), GalutinisMed(other.GalutinisMed) {}
+    
+    // Copy assignment operator
+    Studentas& operator=(const Studentas& other) {
+        if (this == &other) return *this;
+        Vardas = other.Vardas;
+        Pavarde = other.Pavarde;
+        ND = other.ND;
+        EGZ = other.EGZ;
+        GalutinisVid = other.GalutinisVid;
+        GalutinisMed = other.GalutinisMed;
+        return *this;
+    }
+    
+    // Move constructor
+    Studentas(Studentas&& other) noexcept
+        : Vardas(std::move(other.Vardas)), Pavarde(std::move(other.Pavarde)), ND(std::move(other.ND)), EGZ(other.EGZ), GalutinisVid(other.GalutinisVid), GalutinisMed(other.GalutinisMed) {
+        other.EGZ = 0;
+        other.GalutinisVid = 0;
+        other.GalutinisMed = 0;
+    }
+    
+    // Move assignment operator
+    Studentas& operator=(Studentas&& other) noexcept {
+        if (this == &other) return *this;
+        Vardas = std::move(other.Vardas);
+        Pavarde = std::move(other.Pavarde);
+        ND = std::move(other.ND);
+        EGZ = other.EGZ;
+        GalutinisVid = other.GalutinisVid;
+        GalutinisMed = other.GalutinisMed;
+        other.EGZ = 0;
+        other.GalutinisVid = 0;
+        other.GalutinisMed = 0;
+        return *this;
+    }
+
     // Getters
     std::string getVardas() const { return Vardas; }
     std::string getPavarde() const { return Pavarde; }
