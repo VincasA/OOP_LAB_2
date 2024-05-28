@@ -17,6 +17,7 @@
 template <typename Container>
 bool readDataFromFile(const std::string& filename, Container& studentai) {
     std::ifstream file(filename);
+    std::ofstream outfile("studentai_rezultatai.txt");
     if (!file.is_open()) {
         throw std::runtime_error("Neisejo atidaryti ivesties failo");
     }
@@ -51,6 +52,12 @@ bool readDataFromFile(const std::string& filename, Container& studentai) {
         temp.setNd(nd);
         temp.setGalutinisVid(calculateFinalGrade(calculateHomeworkAverage(nd), temp.getEgz()));
         temp.setGalutinisMed(calculateFinalGrade(calculateMedian(nd), temp.getEgz()));
+
+        // Print out the student data
+        outfile << temp.getPavarde() << " " << temp.getVardas() << " " 
+                  << std::fixed << std::setprecision(2) 
+                  << temp.getGalutinisVid() << " " 
+                  << temp.getGalutinisMed() << std::endl;
 
         studentai.push_back(temp);
     }
