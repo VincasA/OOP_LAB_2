@@ -17,6 +17,7 @@
 template <typename Container>
 bool readDataFromFile(const std::string& filename, Container& studentai) {
     std::ifstream file(filename);
+    std::ofstream outfile("studentai_rezultatai");
     if (!file.is_open()) {
         throw std::runtime_error("Neisejo atidaryti ivesties failo");
     }
@@ -52,7 +53,14 @@ bool readDataFromFile(const std::string& filename, Container& studentai) {
         temp.setGalutinisVid(calculateFinalGrade(calculateHomeworkAverage(nd), temp.getEgz()));
         temp.setGalutinisMed(calculateFinalGrade(calculateMedian(nd), temp.getEgz()));
 
-        studentai.push_back(temp);
+        // Isspausdina rezultatus
+        outfile << temp.getPavarde() << " " << temp.getVardas() << " " 
+                  << std::fixed << std::setprecision(2) 
+                  << temp.getGalutinisVid() << " " 
+                  << temp.getGalutinisMed() << std::endl;
+
+        // Naudojamas move konstruktorius
+        studentai.push_back(std::move(temp));
     }
 
     file.close();
@@ -102,7 +110,8 @@ void readDataFromUser(Container& studentai) {
         temp.setGalutinisVid(calculateFinalGrade(calculateHomeworkAverage(nd), temp.getEgz()));
         temp.setGalutinisMed(calculateFinalGrade(calculateMedian(nd), temp.getEgz()));
 
-        studentai.push_back(temp);
+        // Naudojamas move konstruktorius
+        studentai.push_back(std::move(temp));
     }
 
     sortStudents(studentai);
@@ -196,9 +205,11 @@ template <typename Container>
 void splitStrategy1(const Container& studentai, Container& vargsiai, Container& kietekai) {
     for (const auto& student : studentai) {
         if (student.getGalutinisVid() < 5.0) {
-            vargsiai.push_back(student);
+            // Naudojamas move operatorius
+            vargsiai.push_back(std::move(student));
         } else {
-            kietekai.push_back(student);
+            // Naudojamas move operatorius
+            kietekai.push_back(std::move(student));
         }
     }
 }
@@ -207,6 +218,7 @@ template <typename Container>
 void splitStrategy2(Container& studentai, Container& vargsiai) {
     for (auto it = studentai.begin(); it != studentai.end(); ) {
         if (it->getGalutinisVid() < 5.0) {
+            // Naudojamas move assignment operatorius
             vargsiai.push_back(std::move(*it));
             it = studentai.erase(it);
         } else {
