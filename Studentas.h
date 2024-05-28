@@ -82,4 +82,4 @@ public:
     void addNd(double grade) { ND.push_back(grade); }
 };
 
-#endif // STUDENTAS_H
+#endif
