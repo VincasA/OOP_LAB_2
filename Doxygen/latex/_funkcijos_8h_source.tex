@@ -1,0 +1,49 @@
+\doxysection{C\+:/\+Users/vincas/\+Documents/\+Git\+Hub/\+OOP\+\_\+\+LAB\+\_\+2/\+Funkcijos.h}
+\hypertarget{_funkcijos_8h_source}{}\label{_funkcijos_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ FUNKCIJOS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ FUNKCIJOS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}Studentas.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <deque>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <list>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keywordtype}{double}\ calculateHomeworkAverage(\textcolor{keyword}{const}\ std::vector<double>\&\ paz);}
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{double}\ calculateMedian(std::vector<double>\ paz);}
+\DoxyCodeLine{00012\ \textcolor{keywordtype}{double}\ calculateFinalGrade(\textcolor{keywordtype}{double}\ ND,\ \textcolor{keywordtype}{double}\ EGZ);}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Container>}
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{bool}\ readDataFromFile(\textcolor{keyword}{const}\ std::string\&\ filename,\ Container\&\ studentai);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Container>}
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{void}\ readDataFromUser(Container\&\ studentai);}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ sortStudents(std::list<Studentas>\&\ studentai);}
+\DoxyCodeLine{00021\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Container>}
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{void}\ sortStudents(Container\&\ studentai);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{int}\ RandomPazymys();}
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{void}\ FailuSukurimas(\textcolor{keyword}{const}\ std::vector<int>\&\ dydziai);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Container>}
+\DoxyCodeLine{00028\ \textcolor{keywordtype}{void}\ processStudents(\textcolor{keyword}{const}\ std::string\&\ filename,\ \textcolor{keywordtype}{double}\&\ sortTime,\ \textcolor{keywordtype}{double}\&\ splitTime,\ \textcolor{keywordtype}{double}\&\ writeTime,\ \textcolor{keywordtype}{int}\ strategy);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Container>}
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ LaikoMatavimas(\textcolor{keyword}{const}\ std::vector<int>\&\ dydziai,\ \textcolor{keywordtype}{int}\ strategy);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Container>}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{void}\ splitStrategy1(\textcolor{keyword}{const}\ Container\&\ studentai,\ Container\&\ vargsiai,\ Container\&\ kietekai);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Container>}
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{void}\ splitStrategy2(Container\&\ studentai,\ Container\&\ vargsiai);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Container>}
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ splitStrategy3(Container\&\ studentai,\ Container\&\ vargsiai);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ "{}Funkcijos\_impl.h"{}}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
